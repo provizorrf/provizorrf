@@ -1,0 +1,1241 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Шаг в фармацию</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: white page, thin top bar, one content column (max 1040px).
+   Home: two coloured tiles (yellow = game for grades 1-4, green = test for grades 8-9).
+   Test: one question per screen, plain lettered options like a printed school test.
+   Game: visitor at the pharmacy counter on the left, wooden shelves on the right.
+   One light theme on purpose: it is a school page with drawn illustrations. */
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF; --wash:#F1F5F2; --wash-2:#E3EBE5; --ink:#22302A; --muted:#5B6A62; --rule:#D3DDD6;
+  --green:#16955A; --green-dk:#0E7444; --green-wash:#DFF2E7;
+  --yellow:#FFC93E; --yellow-wash:#FFF2CC;
+  --red:#E04B3B; --red-wash:#FCE4E0;
+  --blue:#3C8AD6; --blue-wash:#E3F0FB;
+  --wood:#B07A4F; --wood-wash:#F4E7D5;
+  --f:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+svg.s{display:block;width:100%;height:auto}
+button,input,textarea{font:inherit;color:inherit}
+a{color:var(--green-dk)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3,h4{margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+
+/* top bar */
+.top{border-bottom:1px solid var(--rule);background:var(--paper)}
+.top-in{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;min-height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.logo .lg{width:32px;flex:none}
+.top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.where{font-size:.92rem;color:var(--muted);font-weight:500}
+.link{background:none;border:0;padding:6px 2px;color:var(--green-dk);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.score{display:inline-flex;align-items:center;gap:6px;font-weight:700;padding:6px 10px;border-radius:8px;background:var(--wash);font-variant-numeric:tabular-nums}
+.score .ic{width:18px}
+.score.pop{animation:pop .4s}
+@keyframes pop{40%{transform:scale(1.18)}}
+.iconbtn{width:40px;height:40px;border-radius:8px;border:2px solid var(--rule);background:var(--paper);display:grid;place-items:center;cursor:pointer;padding:7px}
+
+/* common */
+.main{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:28px 48px}
+.kicker{font-size:.95rem;font-weight:600;color:var(--green-dk)}
+h1{font-size:clamp(1.95rem,5vw,2.7rem);font-weight:800;letter-spacing:-.01em;margin-top:6px}
+.lead{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:60ch}
+h3{font-size:1.15rem;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#fff;border:0;border-radius:8px;padding:12px 24px;font-weight:700;font-size:1rem;cursor:pointer;min-height:48px;text-decoration:none}
+.btn:hover{background:var(--green-dk)}
+.btn[disabled]{background:#A9C9B6;cursor:not-allowed}
+.btn-line{background:var(--paper);color:var(--ink);border:2px solid var(--rule)}
+.btn-line:hover{background:var(--wash)}
+.small{font-size:.92rem;color:var(--muted)}
+ul.plain{margin:10px 0 0;padding-left:20px;display:grid;gap:4px}
+.fade{animation:fade .25s ease both}
+@keyframes fade{from{opacity:.4;transform:translateY(4px)}}
+
+/* home */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+.tile{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.tile:hover{border-color:var(--ink)}
+.tile-game{background:var(--yellow-wash)}
+.tile-test{background:var(--green-wash)}
+.tile-art{padding:18px 18px 0}
+.tile-body{padding:14px 22px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.age{align-self:flex-start;font-weight:700;font-size:.9rem;background:var(--paper);border-radius:6px;padding:3px 10px}
+.tile h2{font-size:1.4rem;font-weight:800}
+.tile .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.home-note{margin-top:22px}
+
+/* test intro */
+.intro{display:grid;grid-template-columns:1.15fr 1fr;gap:36px;align-items:start}
+.intro-art{border-radius:12px;padding:14px 14px 4px}
+.intro-art.green{background:var(--green-wash)}
+.intro-art.yellow{background:var(--yellow-wash)}
+.intro h3{margin-top:22px}
+.intro .btn{margin-top:22px}
+.intro .small{margin-top:14px;max-width:56ch}
+
+/* question */
+.q{max-width:740px}
+.q-meta{display:flex;justify-content:space-between;gap:12px;font-size:.92rem;color:var(--muted);font-weight:600}
+.progress{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:8px}
+.progress i{height:6px;border-radius:2px;background:var(--wash-2)}
+.progress i.done{background:var(--green)}
+.progress i.now{background:var(--ink)}
+.q h2{font-size:clamp(1.3rem,3.6vw,1.7rem);font-weight:700;margin-top:26px}
+.q h2:focus{outline:none}
+.q .sub{color:var(--muted);margin-top:6px}
+.opts{display:grid;gap:8px;margin-top:20px}
+.opts.two{grid-template-columns:1fr 1fr}
+.opt{display:grid;grid-template-columns:22px 1.3em 1fr;align-items:start;gap:10px;padding:13px 14px;background:var(--paper);border:2px solid var(--rule);border-radius:8px;text-align:left;cursor:pointer;line-height:1.35}
+.opt:hover{border-color:var(--green)}
+.mark{width:22px;height:22px;border:2px solid #8A9A91;border-radius:50%;display:grid;place-items:center;background:var(--paper)}
+.multi .mark{border-radius:5px}
+.letter{color:var(--muted);font-weight:700}
+.opt[aria-pressed="true"]{border-color:var(--green);background:var(--green-wash)}
+.opt[aria-pressed="true"] .mark{border-color:var(--green);background:var(--green)}
+.opt[aria-pressed="true"] .mark::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.multi .opt[aria-pressed="true"] .mark::after{width:10px;height:5px;border-radius:0;background:none;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.opt.off{opacity:.45}
+.opt.right{border-color:var(--green);background:var(--green-wash)}
+.opt.wrong{border-color:var(--red);background:var(--red-wash)}
+.counter{font-size:.92rem;color:var(--muted);margin-top:10px}
+.counter.warn{color:var(--red);font-weight:600}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
+.slider{margin-top:22px;max-width:640px}
+.slider .val{font-size:1.25rem;font-weight:800}
+.slider .cap{color:var(--muted)}
+input[type=range]{width:100%;margin:20px 0 6px;accent-color:var(--green);height:28px;cursor:pointer}
+.ticks{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);gap:4px;line-height:1.2}
+.ticks span{flex:1;text-align:center}
+.ticks span:first-child{text-align:left}
+.ticks span:last-child{text-align:right}
+.pairs{display:grid;gap:10px;margin-top:20px}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.pair .or{align-self:center;color:var(--muted);font-size:.9rem}
+.side{padding:13px 12px;border:2px solid var(--rule);border-radius:8px;background:var(--paper);cursor:pointer;line-height:1.3}
+.side:hover{border-color:var(--green)}
+.side[aria-pressed="true"]{border-color:var(--green);background:var(--green-wash);font-weight:700}
+.fb{margin-top:16px;padding:14px 16px;border-radius:8px;background:var(--wash)}
+.fb b{display:block;margin-bottom:2px}
+
+/* fact */
+.fact{display:grid;grid-template-columns:116px 1fr;gap:24px;align-items:center;background:var(--green);color:#fff;border-radius:12px;padding:28px;max-width:820px}
+.fact .fart{background:#fff;border-radius:50%;padding:16px}
+.fact-k{font-weight:700;opacity:.9}
+.fact-t{font-size:clamp(1.2rem,3.4vw,1.5rem);font-weight:700;line-height:1.3;margin-top:6px}
+.fact-s{margin-top:12px;font-size:.92rem}
+.fact-s a{color:#fff}
+
+/* result */
+.result{max-width:840px}
+.rb{border-top:1px solid var(--rule);padding-top:22px;margin-top:26px}
+.rb h3{margin-bottom:12px;font-size:1.2rem}
+.edu-t{font-size:1.45rem;font-weight:800}
+.edu-p{margin-top:6px;max-width:66ch}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:16px}
+.scale div{padding:8px 4px;text-align:center;font-size:.82rem;border-radius:6px;background:var(--wash);color:var(--muted);line-height:1.2}
+.scale div.on{background:var(--green);color:#fff;font-weight:700}
+.dirs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.dir{display:grid;grid-template-columns:60px 1fr;gap:16px;align-items:start;padding:14px 16px;border:2px solid var(--rule);border-radius:10px}
+.dir.first{border-color:var(--green);background:var(--green-wash)}
+.dir .tag{font-size:.86rem;font-weight:700;color:var(--green-dk)}
+.dir h4{margin:2px 0 4px;font-size:1.1rem}
+.dir p{color:var(--muted);font-size:.95rem}
+.fmts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.fmts span{padding:6px 12px;border-radius:6px;background:var(--wash);color:var(--muted);font-size:.92rem}
+.fmts span.on{background:var(--ink);color:#fff;font-weight:700}
+.ptable{border:2px solid var(--rule);border-radius:10px;overflow:hidden}
+.prow{display:grid;grid-template-columns:1.6fr .9fr 1.1fr;gap:16px;padding:14px 16px;border-top:1px solid var(--rule)}
+.prow:first-child{border-top:0}
+.prow.head{background:var(--wash);font-size:.86rem;font-weight:700;color:var(--muted);padding-block:10px}
+.prow > div{min-width:0}
+.prow b{display:block;font-size:1.02rem}
+.prow .d{font-size:.9rem;color:var(--muted);margin-top:2px}
+.pay{font-weight:800;font-size:1.1rem;color:var(--green-dk);font-variant-numeric:tabular-nums}
+.note{font-size:.8rem;color:var(--muted);margin-top:2px;line-height:1.35}
+.note a{color:inherit}
+.etag{font-size:.94rem}
+.vahta{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;margin-top:14px;padding:14px 16px;background:var(--blue-wash);border-radius:10px}
+.vahta b{display:block}
+ul.next{margin:0;padding-left:20px;display:grid;gap:6px}
+details.src{margin-top:26px}
+details.src summary{cursor:pointer;font-weight:700;color:var(--green-dk)}
+details.src ul{padding-left:20px;font-size:.9rem;color:var(--muted);display:grid;gap:4px;margin:10px 0 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+textarea.copy{width:100%;min-height:150px;margin-top:12px;border:2px solid var(--rule);border-radius:8px;padding:12px;font-size:.9rem;background:var(--wash)}
+
+/* game: intro + study */
+ol.g-steps{margin:16px 0 0;padding-left:22px;display:grid;gap:8px;font-size:1.05rem;max-width:56ch}
+.field{display:grid;gap:6px;margin-top:22px;max-width:340px}
+.field label{font-weight:700}
+.field input{border:2px solid var(--rule);border-radius:8px;padding:11px 14px;font-size:1.05rem;background:var(--paper)}
+.field input:focus{border-color:var(--green);outline:none}
+.teacher{margin-top:22px;padding:14px 16px;background:var(--wash);border-radius:8px;font-size:.92rem;color:var(--muted);max-width:62ch}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.rule{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:12px 16px;border-radius:10px;background:var(--yellow-wash);font-weight:600;line-height:1.35}
+.rule.red{background:var(--red-wash)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:22px}
+.card{perspective:900px;background:none;border:0;padding:0;cursor:pointer;height:178px;text-align:center}
+.card .in{position:relative;display:block;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.card[aria-pressed="true"] .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--rule);border-radius:10px;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px}
+.face .ia{width:66px}
+.face b{font-size:.98rem;line-height:1.2}
+.face.back{transform:rotateY(180deg);background:var(--green-wash);border-color:var(--green);font-size:.88rem;line-height:1.3;font-weight:500}
+.face.back b{font-size:.9rem;color:var(--green-dk)}
+.card.doc .face.front{border-color:var(--red)}
+.card.doc .face.back{background:var(--red-wash);border-color:var(--red)}
+.card.doc .face.back b{color:#9A2A1D}
+.card .seen{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--green);display:none}
+.card .seen::after{content:"";position:absolute;left:6px;top:5px;width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.card.was .seen{display:block}
+.study-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:22px}
+.meter{flex:1;min-width:220px;font-weight:600}
+.meter .t{height:10px;border-radius:5px;background:var(--wash-2);margin-top:6px;overflow:hidden}
+.meter .t i{display:block;height:100%;background:var(--green);transition:width .25s}
+
+/* game: counter */
+.scene{display:grid;grid-template-columns:1fr 1.05fr;gap:18px;align-items:start}
+.visit{border:2px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--paper)}
+.v-top{padding:14px 18px 0;background:var(--blue-wash)}
+.v-count{font-size:.9rem;font-weight:700;color:var(--muted)}
+.v-row{display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:end;margin-top:6px}
+.v-face{width:132px}
+.bubble{position:relative;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:12px 14px;margin-bottom:28px;font-size:1.08rem;line-height:1.35}
+.bubble::after{content:"";position:absolute;left:-9px;bottom:18px;width:14px;height:14px;background:var(--paper);border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg)}
+.bubble b{display:block;font-size:.95rem;color:var(--green-dk)}
+.desk{background:var(--green);border-top:10px solid #1FAE6B;padding:14px 18px 18px}
+.tray{background:var(--paper);border-radius:8px;padding:12px;min-height:80px}
+.tray p.t{font-weight:700;font-size:.92rem;color:var(--green-dk);margin-bottom:8px}
+.picked{display:flex;flex-wrap:wrap;gap:8px}
+.chipi{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border:2px solid var(--green);background:var(--green-wash);border-radius:8px;font-weight:600;font-size:.92rem;cursor:pointer;line-height:1.2;text-align:left}
+.chipi .ia{width:32px;flex:none}
+.chipi.bad{border-color:var(--red);background:var(--red-wash)}
+.chipi .x{color:var(--muted);font-weight:700;margin-left:2px}
+.empty{color:var(--muted);font-size:.95rem}
+.v-bottom{padding:14px 18px 18px;display:grid;gap:12px}
+.msg{padding:10px 14px;border-radius:8px;font-weight:600}
+.msg.no{background:var(--red-wash);color:#9A2A1D}
+.msg.hint{background:var(--yellow-wash)}
+.win{padding:14px 16px;border-radius:8px;background:var(--green-wash);border:2px solid var(--green);display:grid;gap:8px}
+.win .pts{font-weight:800;color:var(--green-dk);font-size:1.15rem}
+.v-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.remind{font-size:.88rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.remind .ia{width:26px;flex:none}
+.shelves{border-radius:12px;background:var(--wood-wash);padding:14px 14px 6px}
+.shelves h3{margin:0 0 6px;font-size:1rem;color:#7A5330}
+.shelf-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.item{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;padding:12px 4px 10px;background:none;border:0;border-bottom:7px solid var(--wood);margin-bottom:8px;cursor:pointer;font-size:.8rem;font-weight:600;line-height:1.15;text-align:center;border-radius:6px 6px 0 0;min-height:112px}
+.item .ia{width:54px;transition:transform .12s}
+.item:hover .ia{transform:translateY(-3px)}
+.item[aria-pressed="true"]{background:var(--green-wash)}
+.item[aria-pressed="true"] .ia{opacity:.35}
+.item.blink{background:var(--yellow)}
+.item.blink .ia{animation:blink .9s ease-in-out infinite}
+@keyframes blink{50%{transform:scale(1.12)}}
+
+/* diploma */
+.dip{max-width:700px;margin:0 auto;border:3px solid var(--green);padding:8px;border-radius:6px;background:var(--paper)}
+.dip-in{border:1.5px solid var(--green);padding:clamp(20px,5vw,40px);text-align:center;border-radius:3px}
+.seal{width:84px;margin:0 auto}
+.dk{letter-spacing:.22em;font-weight:700;color:var(--muted);margin-top:14px;font-size:.9rem}
+.dip h2{font-size:clamp(1.8rem,6vw,2.6rem);font-weight:800;color:var(--green-dk);margin-top:4px}
+.to{margin-top:14px;color:var(--muted)}
+.kid-name{font-size:clamp(1.5rem,5vw,2rem);font-weight:800;border-bottom:2px solid var(--rule);display:inline-block;padding:0 24px 4px;margin-top:4px;overflow-wrap:anywhere}
+.stars{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.stars .ia{width:44px}
+.dstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px auto 0;max-width:520px}
+.dstats div{background:var(--wash);border-radius:8px;padding:10px 8px;font-size:.88rem;line-height:1.25}
+.dstats b{display:block;font-size:1.4rem;color:var(--green-dk)}
+.promise{margin:18px auto 0;max-width:46ch}
+.ddate{margin-top:14px;color:var(--muted);font-size:.9rem}
+.after{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+.foot{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:16px 28px;border-top:1px solid var(--rule);font-size:.88rem;color:var(--muted)}
+
+@media (max-width:820px){
+  .scene{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .tiles,.intro{grid-template-columns:1fr}
+  .intro-art{max-width:460px}
+  .rules{grid-template-columns:1fr}
+  .opts.two{grid-template-columns:1fr}
+  .prow{grid-template-columns:1fr;gap:6px}
+  .prow.head{display:none}
+  .fact{grid-template-columns:1fr;padding:22px}
+  .fact .fart{width:92px;padding:12px}
+}
+@media (max-width:440px){
+  .shelf-grid{grid-template-columns:repeat(3,1fr)}
+  .v-row{grid-template-columns:96px 1fr}
+  .v-face{width:96px}
+  .scale div{font-size:.72rem;padding:6px 2px}
+  .dstats{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<div lang="ru">
+  <header class="top"><div class="top-in" id="top"></div></header>
+  <main class="main" id="view"></main>
+  <footer class="foot">Шаг в фармацию: проект ранней профориентации для школьников. Ответы и имена не сохраняются и никуда не отправляются.</footer>
+</div>
+
+<script>
+/* ================= drawing ================= */
+const INK = "#22302A";
+const r2 = n => Math.round(n * 100) / 100;
+function plus(cx, cy, s, fill){
+  const a = s / 2, b = s * 0.18, c = r2(a - b), w = r2(2 * b);
+  return `<path d="M${r2(cx - b)} ${r2(cy - a)}h${w}v${c}h${c}v${w}h-${c}v${c}h-${w}v-${c}h-${c}v-${w}h${c}z" fill="${fill}" stroke="none"/>`;
+}
+const GRP = inner => `<g fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`;
+const svg = (inner, vb) => `<svg class="s" viewBox="${vb || "0 0 64 64"}" aria-hidden="true" focusable="false">${GRP(inner)}</svg>`;
+const at = (inner, x, y, s, vb) => `<svg x="${x}" y="${y}" width="${s}" height="${s}" viewBox="${vb || "0 0 64 64"}">${GRP(inner)}</svg>`;
+
+const PETALS = [0,45,90,135,180,225,270,315].map(a => `<ellipse cx="32" cy="17" rx="4.6" ry="8.5" fill="#FFFFFF" transform="rotate(${a} 32 26)"/>`).join("");
+
+const ITEM_ART = {
+  antiseptic:`<path d="M32 14V9h10"/><rect x="26" y="14" width="12" height="6" rx="1.5" fill="#FFFFFF"/><rect x="28.5" y="20" width="7" height="5" fill="#FFFFFF"/><rect x="19" y="25" width="26" height="31" rx="6" fill="#FFFFFF"/><rect x="22.5" y="33" width="19" height="16" rx="2" fill="#DFF2E7" stroke="none"/>${plus(32,41,10,"#16955A")}`,
+  plaster:`<g transform="rotate(-35 32 32)"><rect x="7" y="24" width="50" height="16" rx="8" fill="#F2C38F"/><rect x="24" y="24" width="16" height="16" fill="#FBE3C6"/><g fill="${INK}" stroke="none"><circle cx="13" cy="29" r="1.3"/><circle cx="13" cy="35" r="1.3"/><circle cx="18.5" cy="32" r="1.3"/><circle cx="51" cy="29" r="1.3"/><circle cx="51" cy="35" r="1.3"/><circle cx="45.5" cy="32" r="1.3"/></g></g>`,
+  cold:`<rect x="27" y="11" width="10" height="8" rx="2" fill="#3C8AD6"/><rect x="12" y="18" width="40" height="34" rx="11" fill="#CBE5F8"/><path d="M32 26v18M24.2 30.5l15.6 9M39.8 30.5l-15.6 9" stroke="#3C8AD6" stroke-width="2.6"/>`,
+  warm:`<path d="M24 21c-2.5-3 2.5-5 0-9M32 21c-2.5-3 2.5-5 0-9M40 21c-2.5-3 2.5-5 0-9"/><path d="M46 31h3a6 6 0 0 1 0 12h-3"/><path d="M15 27h31v17a10 10 0 0 1-10 10H25a10 10 0 0 1-10-10z" fill="#FFC93E"/>`,
+  rest:`<path d="M41 9h8l-8 8h8"/><path d="M51 19h5l-5 5h5" stroke-width="2"/><rect x="7" y="22" width="7" height="30" rx="2" fill="#B07A4F"/><rect x="14" y="36" width="43" height="10" rx="2" fill="#3C8AD6"/><path d="M27 36c4-7 26-7 30 0z" fill="#9CC8F0"/><rect x="16" y="29" width="13" height="7" rx="3.5" fill="#FFFFFF"/><path d="M14 46v6M55 46v6"/>`,
+  chamomile:`<path d="M32 36v20"/><path d="M32 50c-7 0-11-3-12-8 6 0 10 3 12 8z" fill="#7CC36B"/>${PETALS}<circle cx="32" cy="26" r="6.5" fill="#FFC93E"/>`,
+  orange:`<circle cx="32" cy="38" r="18" fill="#FF9B2F"/><path d="M32 20c0-3 1-6 3-8"/><path d="M34 16c3-6 10-7 15-5-2 5-9 8-15 5z" fill="#5DB86A"/><g fill="#D9761A" stroke="none"><circle cx="25" cy="34" r="1.1"/><circle cx="38" cy="31" r="1.1"/><circle cx="35" cy="45" r="1.1"/><circle cx="25" cy="45" r="1.1"/><circle cx="42" cy="40" r="1.1"/></g>`,
+  soap:`<g transform="rotate(-10 30 40)"><rect x="10" y="29" width="40" height="22" rx="8" fill="#F7B6C8"/><path d="M18 37c5-3 14-3 20-1" stroke="#FFFFFF" stroke-width="2.6"/></g><circle cx="46" cy="19" r="6" fill="#E3F0FB"/><circle cx="54" cy="29" r="3.5" fill="#E3F0FB"/><circle cx="37" cy="12" r="3" fill="#E3F0FB"/>`,
+  hat:`<ellipse cx="32" cy="42" rx="26" ry="9" fill="#FFE29A"/><path d="M18 41c0-15 28-15 28 0z" fill="#FFE29A"/><path d="M20.6 36h22.8" stroke="#E04B3B" stroke-width="4" stroke-linecap="butt"/>`,
+  sun:`<path d="M21 10h22l-3 38H24z" fill="#FFFFFF"/><rect x="24" y="48" width="16" height="8" rx="2" fill="#FF9B2F"/><circle cx="32" cy="27" r="5" fill="#FFC93E"/><path d="M32 17.5v2.6M32 33.9v2.6M22.5 27h2.6M38.9 27h2.6M25.3 20.3l1.8 1.8M36.9 31.9l1.8 1.8M38.7 20.3l-1.8 1.8M27.1 31.9l-1.8 1.8" stroke-width="2"/>`,
+  water:`<path d="M20 12h24l-3.5 42h-17z" fill="#EEF7FD" stroke="none"/><path d="M21.5 30c3.5-2 7-2 10.5 0s7 2 10.5 0l-2 24h-17z" fill="#8CC6F2" stroke="none"/><path d="M21.5 30c3.5-2 7-2 10.5 0s7 2 10.5 0" stroke-width="2"/><path d="M20 12h24l-3.5 42h-17z"/>`,
+  air:`<path d="M10 56h44"/><rect x="29" y="38" width="6" height="18" fill="#A8703F"/><circle cx="21" cy="33" r="9" fill="#5DB86A"/><circle cx="43" cy="33" r="9" fill="#5DB86A"/><circle cx="32" cy="23" r="13" fill="#5DB86A"/>`,
+  balm:`<path d="M26 26V15a6 6 0 0 1 12 0v11z" fill="#F28FA6"/><rect x="24" y="26" width="16" height="7" rx="1.5" fill="#FFFFFF"/><rect x="23" y="33" width="18" height="23" rx="3" fill="#7CC6A6"/><path d="M28 39v10" stroke="#FFFFFF" stroke-width="3"/>`,
+  doctor:`<rect x="18" y="6" width="28" height="52" rx="6" fill="#2F3B35"/><rect x="22" y="12" width="20" height="36" rx="2" fill="#FFFFFF" stroke="none"/>${plus(32,24,12,"#E04B3B")}<text x="32" y="42" text-anchor="middle" font-family="Onest,Arial,sans-serif" font-weight="800" font-size="9" fill="${INK}" stroke="none">103</text><circle cx="32" cy="53" r="1.8" fill="#FFFFFF" stroke="none"/>`
+};
+
+const SPHERE_ART = {
+  apt:`<rect x="10" y="28" width="44" height="28" fill="#FFFFFF"/><path d="M6 28h52"/><rect x="26" y="38" width="12" height="18" fill="#DFF2E7"/><rect x="14" y="34" width="8" height="8" fill="#E3F0FB"/><rect x="42" y="34" width="8" height="8" fill="#E3F0FB"/><path d="M32 23v5"/><rect x="23" y="5" width="18" height="18" rx="3" fill="#16955A"/>${plus(32,14,11,"#FFFFFF")}`,
+  prod:`<path d="M8 56V32l12 8v-8l12 8v-8l12 8V14h10v42z" fill="#FFFFFF"/><rect x="14" y="44" width="6" height="6" fill="#DFF2E7"/><rect x="26" y="44" width="6" height="6" fill="#DFF2E7"/><rect x="38" y="44" width="6" height="6" fill="#DFF2E7"/><g transform="rotate(-30 49 30)"><rect x="43" y="27" width="12" height="6" rx="3" fill="#FFC93E"/><path d="M49 27v6"/></g>`,
+  lab:`<path d="M28 8v16L14 50a4 4 0 0 0 3.5 6h29a4 4 0 0 0 3.5-6L36 24V8z" fill="#FFFFFF" stroke="none"/><path d="M19.6 41h24.8l5.5 9.6a3 3 0 0 1-2.6 4.4H16.7a3 3 0 0 1-2.6-4.4z" fill="#8FD3A9" stroke="none"/><path d="M28 8v16L14 50a4 4 0 0 0 3.5 6h29a4 4 0 0 0 3.5-6L36 24V8"/><path d="M25 8h14"/><circle cx="28" cy="47" r="2" fill="#FFFFFF"/><circle cx="36" cy="44" r="1.5" fill="#FFFFFF"/>`,
+  log:`<rect x="6" y="18" width="34" height="26" rx="2" fill="#FFFFFF"/>${plus(23,31,12,"#16955A")}<path d="M40 26h9l7 9v9H40z" fill="#CBE5F8"/><path d="M44 30h4l4 5h-8z" fill="#FFFFFF"/><circle cx="17" cy="46" r="5" fill="${INK}"/><circle cx="47" cy="46" r="5" fill="${INK}"/>`,
+  mgmt:`<rect x="10" y="10" width="44" height="34" rx="3" fill="#FFFFFF"/><path d="M32 44v10M23 56h18"/><rect x="18" y="30" width="6" height="8" fill="#FFC93E"/><rect x="29" y="24" width="6" height="14" fill="#16955A"/><rect x="40" y="18" width="6" height="20" fill="#3C8AD6"/>`,
+  sales:`<path d="M24 20v-5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v5"/><rect x="8" y="20" width="48" height="32" rx="4" fill="#B07A4F"/><path d="M8 33h48"/><rect x="28" y="29" width="8" height="8" rx="1.5" fill="#FFC93E"/>`,
+  beauty:`<rect x="14" y="14" width="36" height="11" rx="3" fill="#F28FA6"/><path d="M16 25h32v25a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="#FFFFFF"/><path d="M32 49c-7 0-9-7-7-12 5 0 9 5 7 12z" fill="#7CC36B"/><path d="M32 49c0-5 2-9 6-11"/>`
+};
+
+const MISC = {
+  family:`<circle cx="24" cy="16" r="7" fill="#F3C9A5"/><path d="M12 56V36a12 12 0 0 1 24 0v20z" fill="#3C8AD6"/><circle cx="45" cy="30" r="5.5" fill="#F6D3B6"/><path d="M37 56V45a8 8 0 0 1 16 0v11z" fill="#FFC93E"/>`,
+  heart:`<path d="M12 20.5s-8-4.8-8-10.4A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 8 2.5c0 5.6-8 10.4-8 10.4z" fill="#E04B3B" stroke="none"/>`,
+  star:`<path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="#FFC93E" stroke-width="1.4"/>`,
+  starOff:`<path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="#FFFFFF" stroke="#C5D0C9" stroke-width="1.4"/>`,
+  soundOn:`<path d="M4 9h4l5-4v14l-5-4H4z" fill="${INK}" stroke-width="1.6"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11" stroke-width="1.8"/>`,
+  soundOff:`<path d="M4 9h4l5-4v14l-5-4H4z" fill="${INK}" stroke-width="1.6"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" stroke-width="1.8"/>`
+};
+const LOGO = `<svg class="s lg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#16955A"/>${plus(16,16,18,"#FFFFFF")}</svg>`;
+
+function kid(v, happy){
+  const S = v.skin, H = v.hair || "#3A2A20", A = v.acc || "#E04B3B";
+  let back = "", front = "";
+  if(v.style === "bob"){
+    back = `<path d="M25 66c-5-33 12-45 35-45s40 12 35 45l-3 18H28z" fill="${H}"/>`;
+    front = `<path d="M30 54c2-17 15-25 30-25s28 8 30 25c-11-7-19-10-30-10s-19 3-30 10z" fill="${H}"/>`;
+  } else if(v.style === "pigtails"){
+    back = `<circle cx="25" cy="66" r="11" fill="${H}"/><circle cx="95" cy="66" r="11" fill="${H}"/>`;
+    front = `<path d="M29 56c0-20 14-30 31-30s31 10 31 30c-8-9-18-13-31-13s-23 4-31 13z" fill="${H}"/><circle cx="31" cy="59" r="4" fill="${A}"/><circle cx="89" cy="59" r="4" fill="${A}"/>`;
+  } else if(v.style === "curly"){
+    front = `<circle cx="36" cy="47" r="10" fill="${H}"/><circle cx="84" cy="47" r="10" fill="${H}"/><circle cx="46" cy="35" r="11" fill="${H}"/><circle cx="74" cy="35" r="11" fill="${H}"/><circle cx="60" cy="30" r="12" fill="${H}"/>`;
+  } else if(v.style === "cap"){
+    front = `<path d="M31 52c0-17 13-26 29-26s29 9 29 26z" fill="${A}"/><path d="M28 52c12-4 52-4 64 0c-2 6-62 6-64 0z" fill="${A}"/><circle cx="60" cy="27" r="3" fill="${A}"/>`;
+  } else if(v.style === "pony"){
+    back = `<path d="M84 40c18 4 22 28 10 44-1-15-8-26-17-32z" fill="${H}"/>`;
+    front = `<path d="M30 56c-2-21 12-32 30-32s32 11 30 32c-9-9-19-13-30-13-8 0-16 3-22 8z" fill="${H}"/><circle cx="86" cy="42" r="4" fill="${A}"/>`;
+  } else {
+    front = `<path d="M30 54c-1-19 12-30 30-30s31 11 30 30c-5-9-15-13-30-13s-25 4-30 13z" fill="${H}"/><path d="M50 30c5-6 15-7 20-3-6 1-10 4-12 8z" fill="${H}"/>`;
+  }
+  const eyes = happy
+    ? `<path d="M44 62q5-6 10 0M66 62q5-6 10 0" stroke-width="3"/>`
+    : `<circle cx="49" cy="61" r="3.6" fill="${INK}" stroke="none"/><circle cx="71" cy="61" r="3.6" fill="${INK}" stroke="none"/><path d="M45 52l8-4M75 52l-8-4"/>`;
+  const mouth = happy ? `<path d="M50 72c4 9 16 9 20 0z" fill="#B8423A"/>` : `<path d="M52 79c4-5 12-5 16 0"/>`;
+  const cheeks = happy ? `<circle cx="41" cy="71" r="5" fill="#F4A08F" stroke="none" opacity=".75"/><circle cx="79" cy="71" r="5" fill="#F4A08F" stroke="none" opacity=".75"/>` : "";
+  const tear = (!happy && v.tear) ? `<path d="M78 66c2 3 3.2 5 3.2 6.6a3.2 3.2 0 0 1-6.4 0c0-1.6 1.2-3.6 3.2-6.6z" fill="#8CC6F2" stroke-width="1.6"/>` : "";
+  return `${back}<rect x="52" y="78" width="16" height="14" fill="${S}"/><path d="M18 120c2-21 18-31 42-31s40 10 42 31z" fill="${v.shirt}"/><circle cx="31" cy="62" r="6.5" fill="${S}"/><circle cx="89" cy="62" r="6.5" fill="${S}"/><circle cx="60" cy="58" r="30" fill="${S}"/>${front}${eyes}${mouth}${cheeks}${tear}`;
+}
+const kidSvg = (v, happy) => svg(kid(v, happy), "0 0 120 120");
+
+const HOME_KID = {style:"pigtails", hair:"#6B3E22", acc:"#16955A", skin:"#F3C9A5", shirt:"#FFFFFF"};
+function artGame(){
+  return `<svg class="s" viewBox="0 0 320 196" aria-hidden="true" focusable="false">
+    ${GRP(`<path d="M20 74h280" stroke="#B07A4F" stroke-width="6"/>`)}
+    ${at(ITEM_ART.antiseptic,40,24,48)}${at(ITEM_ART.plaster,104,24,48)}${at(ITEM_ART.orange,168,24,48)}${at(ITEM_ART.cold,232,24,48)}
+    <svg x="104" y="50" width="112" height="112" viewBox="0 0 120 120">${GRP(kid(HOME_KID, true))}</svg>
+    ${GRP(`<rect x="8" y="150" width="304" height="46" fill="#16955A"/><rect x="2" y="142" width="316" height="12" rx="3" fill="#1FAE6B"/>`)}
+  </svg>`;
+}
+function artTest(){
+  const stop = (k, cx, cy) => `${GRP(`<circle cx="${cx}" cy="${cy}" r="31" fill="#FFFFFF"/>`)}${at(SPHERE_ART[k], cx - 22, cy - 22, 44)}`;
+  return `<svg class="s" viewBox="0 0 320 196" aria-hidden="true" focusable="false">
+    <path d="M48 144C90 144 88 62 128 62S170 130 206 130S250 54 278 54" fill="none" stroke="#16955A" stroke-width="3" stroke-dasharray="1 9" stroke-linecap="round"/>
+    ${stop("apt",48,144)}${stop("lab",128,62)}${stop("log",206,130)}${stop("prod",278,54)}
+  </svg>`;
+}
+
+/* ================= test: data ================= */
+const SPHERES = {
+  apt:{name:"Аптека, работа за первым столом", head:"работа в аптеке", short:"Аптека",
+       text:"Отпуск лекарственных препаратов, фармацевтическое консультирование посетителей, приёмка товара и контроль условий хранения.",
+       next:"Попросись на экскурсию в аптеку и посмотри, как проходит смена фармацевта за первым столом."},
+  prod:{name:"Фармацевтическое производство", head:"фармацевтическое производство", short:"Производство",
+       text:"Выпуск таблеток, мазей и растворов на заводе по правилам надлежащей производственной практики (GMP).",
+       next:"Узнай, проводит ли фармацевтический завод в твоём регионе экскурсии или дни открытых дверей."},
+  lab:{name:"Контроль качества и наука", head:"контроль качества и наука", short:"Лаборатория",
+       text:"Анализ сырья и готовых лекарств, разработка новых препаратов, клинические исследования.",
+       next:"Запишись на профпробу в лаборатории фармацевтического колледжа или вуза."},
+  log:{name:"Фармацевтическая логистика", head:"фармацевтическая логистика", short:"Логистика",
+       text:"Приёмка, хранение и доставка лекарств от производителя до аптеки с соблюдением температурного режима.",
+       next:"Спроси, можно ли побывать на складе фармацевтического дистрибьютора."},
+  mgmt:{name:"Управление аптекой", head:"управление аптекой", short:"Управление",
+       text:"Руководство аптекой или аптечной сетью: персонал, ассортимент, закупки, финансовые показатели.",
+       next:"Расспроси заведующего аптекой, как он пришёл к руководящей должности."},
+  sales:{name:"Продвижение препаратов", head:"продвижение препаратов", short:"Продвижение",
+       text:"Работа медицинского представителя: информирование врачей и сотрудников аптек о препаратах компании.",
+       next:"Задай вопросы медицинскому представителю на встрече со специалистами."},
+  beauty:{name:"Косметика и средства ухода", head:"косметика и средства ухода", short:"Косметика",
+       text:"Подбор лечебной и уходовой косметики в аптеке, разработка косметических средств на производстве.",
+       next:"Расспроси фармацевта, как подбирают лечебную косметику для разных типов кожи."}
+};
+const SPHERE_KEYS = Object.keys(SPHERES);
+const FORMATS = {
+  people:{name:"С людьми", phrase:"с людьми"},
+  office:{name:"В офисе", phrase:"в офисе"},
+  labf:{name:"В лаборатории или на производстве", phrase:"в лаборатории или на производстве"},
+  field:{name:"В разъездах", phrase:"в разъездах"}
+};
+const FORMAT_KEYS = Object.keys(FORMATS);
+const EDU = {
+  spo:{title:"Колледж", where:"в колледже",
+       text:"Специальность «Фармация»: 2 года 10 месяцев после 9 класса. После первичной аккредитации можно работать фармацевтом, а позже продолжить учёбу в вузе."},
+  vo:{title:"Вуз", where:"в вузе",
+      text:"Специальность «Фармация», специалитет: 5 лет после 11 класса. После аккредитации можно работать провизором, дальше открыт путь в управление, на производство и в науку."},
+  bridge:{title:"Колледж, затем вуз", where:"в колледже, а потом продолжить в вузе",
+      text:"Сначала колледж (2 года 10 месяцев после 9 класса) и работа фармацевтом, затем вуз. Так ты раньше начнёшь работать и сохранишь возможность роста."}
+};
+const SCALE = ["колледж","скорее колледж","оба пути","скорее вуз","вуз"];
+const EDU_TAG = {spo:"Колледж", vo:"Вуз", both:"Колледж или вуз", none:"Профильное образование не обязательно"};
+
+/* Pay: the upper end of employer offers where available; every figure keeps its source and date. */
+const PROFS = {
+  apt:[
+    {name:"Фармацевт", edu:"spo", pay:"до 130 800 ₽", note:"максимальная предлагаемая зарплата фармацевтов и провизоров в Москве, hh.ru, август 2026", url:"https://www.gazeta.press/business/news/2026/09/24/29384389.shtml", does:"Отпускает лекарственные препараты, консультирует посетителей, работает с товаром."},
+    {name:"Провизор-технолог", edu:"vo", pay:"до 170 000 ₽", note:"Москва, SuperJob, сентябрь 2026", url:"https://pharmvestnik.ru/content/news/superjob-nazval-zarplatnyi-minimum-i-maksimum-provizorov-tehnologov-v-sentyabre.html", does:"Принимает рецепты, отпускает и изготавливает лекарства, следит за фармацевтическим порядком."},
+    {name:"Фармацевт или провизор на вахте", edu:"both", pay:"от 120 000 ₽ на руки", note:"вахта 60 смен, график 6/1, северные города, вакансия hh.ru, август 2026", url:"https://hh.ru/vacancy/135928557", does:"Работает вахтой в аптеках северных городов."}
+  ],
+  mgmt:[
+    {name:"Заведующий аптекой", edu:"both", pay:"до 270 000 ₽", note:"при опыте руководства несколькими аптеками, Москва, SuperJob, апрель 2025", url:"https://pharmvestnik.ru/content/news/SuperJob-nazval-zarplatnyi-minimum-i-maksimum-zaveduushih-aptekoi-v-aprele.html", does:"Руководит аптекой: персонал, ассортимент, план продаж, лицензионные требования."},
+    {name:"Заместитель заведующего аптекой", edu:"both", pay:"до 180 000 ₽", note:"Москва, SuperJob, октябрь 2025", url:"https://pharmvestnik.ru/content/news/SuperJob-nazval-zarplatnyi-minimum-i-maksimum-zamestitelei-zaveduushih-aptekoi-v-oktyabre.html", does:"Работает за первым столом, планирует смены, контролирует наличие товара и сроки годности."}
+  ],
+  sales:[
+    {name:"Медицинский представитель", edu:"vo", pay:"до 270 000 ₽", note:"оклад и премии, Москва, SuperJob, май 2025", url:"https://pharmvestnik.ru/content/news/SuperJob-podschital-srednuu-zarplatu-medpredstavitelei-v-krupnyh-gorodah-v-mae.html", does:"Информирует врачей и сотрудников аптек о препаратах компании."}
+  ],
+  prod:[
+    {name:"Главный технолог фармацевтического производства", edu:"vo", pay:"160 000–200 000 ₽", note:"Елец, SuperJob, декабрь 2022", url:"https://gxpnews.net/2022/12/v-farmotrasli-sohranyaetsya-vysokij-spros-na-inzhenerno-tehnicheskih-speczialistov-proizvodstva/", does:"Отвечает за то, чтобы лекарства выпускались строго по утверждённой технологии."},
+    {name:"Химик отдела разработки", edu:"vo", pay:"от 100 000 ₽ на руки", note:"фармацевтический завод, Иркутск, вакансия hh.ru, август 2026", url:"https://hh.ru/vacancy/131296987", does:"Исследует стабильность лекарственных средств и внедряет новые технологии."}
+  ],
+  lab:[
+    {name:"Химик-аналитик", edu:"both", pay:"в среднем 100 000 ₽", note:"средняя по всем отраслям, DreamJob, 2026", url:"https://dreamjob.ru/salary/himik-analitik", does:"Анализирует сырьё и готовые лекарства в лаборатории контроля качества."},
+    {name:"Биотехнолог", edu:"vo", pay:"около 177 000 ₽", note:"медиана в Москве: вдвое выше медианы по России (88 500 ₽), вакансии hh.ru, октябрь 2026", url:"https://checkroi.ru/blog/zarplata-biotehnologa/", does:"Создаёт лекарства с помощью живых клеток и микроорганизмов."},
+    {name:"Монитор клинических исследований", edu:"vo", pay:"в среднем 200 000 ₽", note:"международные исследовательские организации, Hays, 2018", url:"https://gxpnews.net/2018/03/uroven-zarplat-specialistov-po-klinicheskim-issledovaniyam-zametno-vyros/", does:"Следит, чтобы испытания новых лекарств проходили по установленным правилам."}
+  ],
+  log:[
+    {name:"Заведующий фармацевтическим складом", edu:"both", pay:"до 240 000 ₽", note:"при опыте 3–5 лет и команде более 30 человек, Москва, SuperJob, июль 2025", url:"https://pharmvestnik.ru/content/news/SuperJob-nazval-zarplatnyi-minimum-i-maksimum-zaveduushih-farmskladom-v-iule.html", does:"Руководит приёмкой и отгрузкой лекарств, отвечает за условия хранения."},
+    {name:"Логист", edu:"both", pay:"до 126 000 ₽", note:"все отрасли, hh.ru, апрель 2026", url:"https://sber.pro/publication/tsifrovizatsiya-logistiki-klyuchevie-professii-kotorie-budut-stroit-otrasl-v-2026-godu/", does:"Планирует закупки, маршруты и сроки доставки."},
+    {name:"Упаковщик на складе оптовой фармацевтики", edu:"none", pay:"3 500–5 000 ₽ за смену", note:"вахта с проживанием и питанием, опыт не нужен, вакансия hh.ru, август 2026", url:"https://hh.ru/vacancy/135881478", does:"Собирает и упаковывает заказы для аптек."}
+  ],
+  beauty:[
+    {name:"Консультант по косметике в аптеке", edu:"both", pay:"55 000–80 000 ₽ на руки", note:"Самара, вакансия hh.ru, сентябрь 2026", url:"https://hh.ru/vacancy/135913802", does:"Подбирает уход для разных типов кожи, консультирует посетителей аптеки."},
+    {name:"Технолог-разработчик косметики", edu:"vo", pay:"от 100 000 ₽ на руки", note:"Москва, вакансия hh.ru, август 2026", url:"https://hh.ru/vacancy/135235761", does:"Разрабатывает рецептуры кремов и других косметических средств."}
+  ]
+};
+
+const BLOCKS = ["Учёба","Работа","Характер","Планы"];
+const LETTERS = ["а","б","в","г","д","е","ж","з","и","к"];
+
+const QUESTIONS = [
+  {id:"subjects", block:0, type:"multi", max:3, two:true,
+   q:"Какие школьные предметы тебе нравятся больше всего?", sub:"Выбери не больше трёх.",
+   options:[
+     {id:"chem", t:"Химия", e:{lab:2,prod:2,apt:1,beauty:1,vo:1,labf:1}},
+     {id:"bio", t:"Биология", e:{apt:2,lab:2,beauty:1,vo:1}},
+     {id:"math", t:"Математика", e:{log:2,mgmt:2,prod:1,office:1}},
+     {id:"phys", t:"Физика", e:{prod:2,lab:1,labf:1}},
+     {id:"inf", t:"Информатика", e:{log:2,mgmt:1,lab:1,office:1}},
+     {id:"soc", t:"Обществознание", e:{mgmt:2,sales:1,office:1}},
+     {id:"rus", t:"Русский язык и литература", e:{sales:1,apt:1,mgmt:1,people:1}},
+     {id:"lang", t:"Иностранный язык", e:{sales:2,lab:1,mgmt:1,vo:1}},
+     {id:"tech", t:"Труд (технология)", e:{prod:2,log:1,spo:1,labf:1}},
+     {id:"art", t:"Изобразительное искусство", e:{beauty:2,sales:1}}
+   ]},
+  {id:"chembio", block:0, type:"single",
+   q:"Как у тебя с химией и биологией?", sub:"Здесь нет правильных и неправильных ответов.",
+   options:[
+     {id:"a", t:"Отлично, нравится разбираться глубже", e:{vo:3,lab:1}},
+     {id:"b", t:"Хорошо, без особых трудностей", e:{vo:2}},
+     {id:"c", t:"Средне, практика интереснее теории", e:{spo:2,prod:1}},
+     {id:"d", t:"Пока трудно, но готов(а) подтянуть", e:{spo:2}}
+   ]},
+  {id:"years", block:0, type:"single",
+   q:"Сколько лет ты готов(а) учиться после 9 класса?",
+   options:[
+     {id:"a", t:"Около трёх лет: колледж, и можно начинать работать", e:{spo:3}},
+     {id:"b", t:"Колледж, а потом вуз, совмещая учёбу с работой", e:{spo:1,vo:1,bridge:1}},
+     {id:"c", t:"Семь лет: 10–11 класс и пять лет в вузе", e:{vo:2}},
+     {id:"d", t:"Больше семи лет: вуз, а потом аспирантура или наука", e:{vo:3,lab:1}}
+   ]},
+
+  {id:"day", block:1, type:"single",
+   q:"Где тебе было бы интереснее работать?",
+   options:[
+     {id:"a", t:"За первым столом в аптеке, консультируя посетителей", e:{apt:3,beauty:1,people:3}},
+     {id:"b", t:"В лаборатории контроля качества", e:{lab:3,labf:3}},
+     {id:"c", t:"В цехе фармацевтического завода", e:{prod:3,labf:2}},
+     {id:"d", t:"В офисе: планирование, документы, отчёты", e:{log:2,mgmt:1,office:3}},
+     {id:"e", t:"В разъездах: встречи с врачами и сотрудниками аптек", e:{sales:3,field:3}},
+     {id:"f", t:"Во главе коллектива аптеки", e:{mgmt:3,people:1,office:1}}
+   ]},
+  {id:"social", block:1, type:"slider", def:2,
+   q:"Насколько тебе нравится общаться с незнакомыми людьми?", sub:"Передвинь ползунок.",
+   stops:[
+     {v:"Совсем не нравится", c:"мне спокойнее работать с задачами, а не с людьми", e:{office:2,labf:1}},
+     {v:"Скорее не нравится", c:"общаюсь, когда это нужно", e:{office:1,labf:1}},
+     {v:"Нормально", c:"могу и так, и так", e:{}},
+     {v:"Нравится", c:"люблю помогать и объяснять", e:{people:2,apt:1,sales:1}},
+     {v:"Очень нравится", c:"общение меня заряжает", e:{people:3,sales:2,apt:1}}
+   ]},
+  {id:"pairs", block:1, type:"pairs",
+   q:"Что тебе ближе?", sub:"Выбери по одному варианту в каждой паре.",
+   pairs:[
+     [{t:"Объяснять и советовать", e:{people:1,apt:1,sales:1}}, {t:"Разбираться, как всё устроено", e:{labf:1,prod:1,lab:1}}],
+     [{t:"Работать по чётким инструкциям", e:{prod:1,log:1,apt:1}}, {t:"Придумывать новое", e:{lab:1,beauty:1,mgmt:1}}],
+     [{t:"Работать в команде", e:{mgmt:1,people:1,apt:1}}, {t:"Работать самостоятельно", e:{lab:1,sales:1,office:1}}],
+     [{t:"Спокойный, размеренный ритм", e:{lab:1,prod:1,office:1}}, {t:"Каждый день что-то новое", e:{sales:1,mgmt:1,log:1,field:1}}]
+   ]},
+  {id:"project", block:1, type:"single",
+   q:"Какую роль ты обычно берёшь в школьном проекте?",
+   options:[
+     {id:"a", t:"Организую работу и распределяю задачи", e:{mgmt:3,people:1}},
+     {id:"b", t:"Считаю и свожу данные в таблицы", e:{log:2,mgmt:1,office:2}},
+     {id:"c", t:"Ставлю опыты или собираю модель", e:{lab:2,prod:2,labf:2}},
+     {id:"d", t:"Выступаю с презентацией", e:{sales:3,people:2}},
+     {id:"e", t:"Отвечаю за оформление", e:{beauty:3}},
+     {id:"f", t:"Ищу информацию и объясняю её другим", e:{apt:2,lab:1,people:1}}
+   ]},
+  {id:"task", block:1, type:"multi", max:2,
+   q:"Какая задача кажется тебе самой интересной?", sub:"Выбери одну или две.",
+   options:[
+     {id:"a", t:"Спланировать доставку лекарств в 50 аптек за один день", e:{log:3}},
+     {id:"b", t:"Выяснить, почему партия таблеток не прошла испытание на растворение", e:{lab:3}},
+     {id:"c", t:"Наладить линию, которая выпускает тысячи упаковок в час", e:{prod:3}},
+     {id:"d", t:"Объяснить пожилому посетителю, как принимать лекарства, назначенные врачом", e:{apt:3,people:1}},
+     {id:"e", t:"Провести презентацию нового препарата для врачей", e:{sales:3}},
+     {id:"f", t:"Разработать рецептуру крема для чувствительной кожи", e:{beauty:3}},
+     {id:"g", t:"Открыть новую аптеку и собрать команду", e:{mgmt:3}}
+   ]},
+
+  {id:"precision", block:2, type:"single",
+   q:"Как ты относишься к точности в работе?",
+   options:[
+     {id:"a", t:"Перепроверю несколько раз: ошибаться нельзя", e:{lab:2,prod:1,apt:1,vo:1}},
+     {id:"b", t:"Работаю внимательно, но без лишней медлительности", e:{log:1,mgmt:1,apt:1}},
+     {id:"c", t:"Мне важнее скорость, детали можно поправить потом", e:{sales:2,mgmt:1}}
+   ]},
+  {id:"conflict", block:2, type:"single",
+   q:"В аптеке очередь, и один посетитель начинает возмущаться. Как бы ты поступил(а)?",
+   options:[
+     {id:"a", t:"Спокойно поговорю с ним и постараюсь быстрее помочь", e:{apt:2,people:2}},
+     {id:"b", t:"Попрошу помочь старшего коллегу", e:{lab:1,prod:1}},
+     {id:"c", t:"Подумаю, как сделать, чтобы очередей не было: изменю график или открою ещё одно рабочее место", e:{mgmt:2,log:1}},
+     {id:"d", t:"Мне было бы неуютно в такой ситуации", e:{labf:2,office:1}}
+   ]},
+  {id:"values", block:2, type:"multi", max:2, two:true,
+   q:"Что для тебя главное в будущей работе?", sub:"Выбери одно или два.",
+   options:[
+     {id:"money", t:"Высокий доход", e:{sales:2,mgmt:2}},
+     {id:"stable", t:"Стабильность", e:{apt:2,prod:1,log:1}},
+     {id:"help", t:"Помогать людям", e:{apt:3,people:1}},
+     {id:"growth", t:"Карьерный рост", e:{mgmt:2,vo:1}},
+     {id:"create", t:"Творчество", e:{beauty:2,lab:1}},
+     {id:"science", t:"Наука и открытия", e:{lab:3,vo:2}},
+     {id:"travel", t:"Поездки", e:{sales:2,field:2}},
+     {id:"early", t:"Начать работать пораньше", e:{spo:3}}
+   ]},
+  {id:"free", block:2, type:"multi", max:3, two:true,
+   q:"Чем ты любишь заниматься в свободное время?", sub:"Выбери не больше трёх.",
+   options:[
+     {id:"social", t:"Веду соцсети, снимаю видео", e:{sales:1,beauty:1,mgmt:1}},
+     {id:"sport", t:"Спорт", e:{sales:1,log:1}},
+     {id:"build", t:"Собираю, чиню, конструирую", e:{prod:2}},
+     {id:"sci", t:"Читаю научно-популярное, ставлю опыты", e:{lab:2}},
+     {id:"games", t:"Стратегии и головоломки", e:{log:2,mgmt:1}},
+     {id:"vol", t:"Волонтёрство, помощь младшим", e:{apt:2,people:1}},
+     {id:"skin", t:"Разбираюсь в средствах ухода за кожей", e:{beauty:2}},
+     {id:"draw", t:"Рисую, занимаюсь дизайном", e:{beauty:1}}
+   ]},
+
+  {id:"future", block:3, type:"single",
+   q:"Кем ты видишь себя через 10 лет?",
+   options:[
+     {id:"a", t:"Руковожу людьми и отвечаю за результат", e:{mgmt:3,vo:1}},
+     {id:"b", t:"Признанный специалист в своём деле", e:{lab:2,prod:1,vo:2}},
+     {id:"c", t:"Работаю в дружном коллективе, без лишнего стресса", e:{apt:1,log:1,spo:1}},
+     {id:"d", t:"Открыл(а) своё дело", e:{mgmt:2,sales:1,beauty:1}}
+   ]},
+  {id:"after9", block:3, type:"single",
+   q:"Что ты планируешь после 9 класса?",
+   options:[
+     {id:"college", t:"Поступить в колледж", e:{spo:4}},
+     {id:"school", t:"Пойти в 10 класс, а потом в вуз", e:{vo:4}},
+     {id:"unsure", t:"Пока не решил(а)", e:{}}
+   ]},
+  {id:"vahta", block:3, type:"single",
+   q:"Готов(а) ли ты работать вахтой?", sub:"Например, 60 смен в аптеке северного города, потом отдых дома. Обычно за вахту платят больше.",
+   options:[
+     {id:"yes", t:"Да, это интересно", e:{vahta:2,field:1}},
+     {id:"maybe", t:"Возможно, если условия будут хорошими", e:{vahta:1}},
+     {id:"no", t:"Нет, хочу работать рядом с домом", e:{}}
+   ]},
+  {id:"quiz", block:3, type:"quiz",
+   q:"Проверь себя: сколько лет в среднем занимает создание нового лекарства, от идеи до аптеки?",
+   options:[{id:"a", t:"1–2 года"}, {id:"b", t:"3–5 лет"}, {id:"c", t:"10–15 лет"}],
+   correct:"c",
+   explain:"Обычно на это уходит 10–15 лет. Над одним препаратом работают химики, биологи, технологи, специалисты по клиническим исследованиям и регистрации."}
+];
+const FACTS = {
+  F1:{art:"apt", text:"Летом 2026 года «фармацевт-провизор» оказался самой востребованной профессией в России: на одну вакансию приходилось 1,7 резюме.",
+      src:"«Фармацевтический вестник», по данным hh.ru", url:"https://pharmvestnik.ru/content/news/farmacevty-vozglavili-spisok-samyh-vostrebovannyh-professii-v-rossii.html"},
+  F2:{art:"lab", text:"На фармацевта учатся в колледже по специальности «Фармация»: 2 года 10 месяцев после 9 класса или 1 год 10 месяцев после 11 класса.",
+      src:"перечень специальностей медицинского колледжа", url:"https://kazangmu.ru/files/kmfu1921/abitur2025/4_Perechen_spetsialnosteq_2025.pdf"}
+};
+const FLOW = ["subjects","chembio","years","day","social","pairs","project","task","F1","precision","conflict","values","free","future","F2","after9","vahta","quiz"];
+const QMAP = Object.fromEntries(QUESTIONS.map((q, i) => [q.id, Object.assign(q, {n:i + 1})]));
+const ALL_KEYS = [...SPHERE_KEYS, ...FORMAT_KEYS, "vo","spo","vahta","bridge"];
+
+/* ================= test: scoring ================= */
+function addEff(t, e){ if(!e) return; for(const k in e) t[k] = (t[k] || 0) + e[k]; }
+const MAX = (() => {
+  const m = Object.fromEntries(ALL_KEYS.map(k => [k, 0]));
+  for(const q of QUESTIONS) for(const k of ALL_KEYS){
+    if(q.type === "single") m[k] += Math.max(0, ...q.options.map(o => (o.e || {})[k] || 0));
+    else if(q.type === "multi") m[k] += q.options.map(o => (o.e || {})[k] || 0).sort((a, b) => b - a).slice(0, q.max).reduce((a, b) => a + b, 0);
+    else if(q.type === "slider") m[k] += Math.max(0, ...q.stops.map(s => s.e[k] || 0));
+    else if(q.type === "pairs") q.pairs.forEach(p => { m[k] += Math.max(p[0].e[k] || 0, p[1].e[k] || 0); });
+  }
+  return m;
+})();
+function totals(ans){
+  const t = Object.fromEntries(ALL_KEYS.map(k => [k, 0]));
+  for(const q of QUESTIONS){
+    const a = ans[q.id];
+    if(a == null) continue;
+    if(q.type === "single") addEff(t, (q.options.find(o => o.id === a) || {}).e);
+    else if(q.type === "multi") a.forEach(id => addEff(t, (q.options.find(o => o.id === id) || {}).e));
+    else if(q.type === "slider") addEff(t, (q.stops[a] || {}).e);
+    else if(q.type === "pairs") a.forEach((s, i) => { if(s != null) addEff(t, q.pairs[i][s].e); });
+  }
+  return t;
+}
+function computeResult(ans){
+  const t = totals(ans);
+  const pct = k => MAX[k] ? t[k] / MAX[k] : 0;
+  const spheres = SPHERE_KEYS.map(k => ({k, p:pct(k), raw:t[k]})).sort((a, b) => b.p - a.p || b.raw - a.raw);
+  const formats = FORMAT_KEYS.map(k => ({k, p:pct(k), raw:t[k]})).sort((a, b) => b.p - a.p || b.raw - a.raw);
+  const sum = t.vo + t.spo, share = sum ? t.vo / sum : 0.5;
+  const step = share < 0.25 ? 0 : share < 0.42 ? 1 : share < 0.58 ? 2 : share < 0.75 ? 3 : 4;
+  let edu = step <= 1 ? "spo" : step === 2 ? "bridge" : "vo";
+  if(t.bridge > 0 && step >= 1 && step <= 3) edu = "bridge";
+  /* professions keep their curated order: the main profession of each direction comes first */
+  const first = PROFS[spheres[0].k].slice(0, 3);
+  const second = PROFS[spheres[1].k].filter(p => p.edu !== "none").slice(0, Math.min(2, Math.max(1, 4 - first.length)));
+  const profs = [...first, ...second].slice(0, 4);
+  return {t, spheres, formats, edu, step, profs, vahta:t.vahta};
+}
+
+/* ================= game: data ================= */
+const ITEMS = {
+  antiseptic:{n:"Антисептик", w:"Обработать ранку или царапину, чтобы в неё не попали микробы."},
+  plaster:{n:"Пластырь", w:"Заклеить ранку после того, как её обработали."},
+  cold:{n:"Холодный компресс", w:"Лёд, завёрнутый в полотенце. Помогает при шишке, ушибе и укусе комара."},
+  warm:{n:"Тёплое питьё", w:"Чай или морс, когда замёрз или начался насморк."},
+  rest:{n:"Отдых и сон", w:"Полежать и поспать, когда простыл или сильно устал."},
+  chamomile:{n:"Ромашковый чай", w:"Тёплый чай с ромашкой, если животик немного побаливает."},
+  orange:{n:"Апельсин", w:"Фрукты и овощи дают витамины, чтобы реже болеть."},
+  soap:{n:"Мыло", w:"Мыть руки после улицы и перед едой, чтобы смыть микробы."},
+  hat:{n:"Панамка", w:"Защищает голову от солнца летом."},
+  sun:{n:"Солнцезащитный крем", w:"Наносят на кожу перед прогулкой на солнце, чтобы не обгореть."},
+  water:{n:"Вода", w:"Пить воду, когда жарко, когда обгорел на солнце или устал."},
+  air:{n:"Свежий воздух", w:"Прогулка на улице, когда устали голова и глаза."},
+  balm:{n:"Гигиеническая помада", w:"Защищает губы от ветра и мороза."},
+  doctor:{n:"Позвать взрослых и врача", w:"Если очень сильно болит, поднялась температура или укусила собака. Скорая помощь: 103 или 112.", doc:true}
+};
+const ITEM_KEYS = Object.keys(ITEMS);
+
+const CASES = [
+  {id:"knee", name:"Петя", say:"Я упал с самоката и поцарапал коленку.", need:["antiseptic","plaster"], ok:["soap"],
+   why:"Ранку сначала обрабатывают антисептиком, а потом заклеивают пластырем.",
+   kid:{style:"short", hair:"#5A3A26", skin:"#F3C9A5", shirt:"#3C8AD6", tear:true}},
+  {id:"paper", name:"Аня", say:"Я порезала палец бумагой.", need:["antiseptic","plaster"], ok:["soap"],
+   why:"Даже маленький порез нужно обработать антисептиком и заклеить пластырем.",
+   kid:{style:"bob", hair:"#C9772E", skin:"#F6D3B6", shirt:"#F28FA6", tear:true}},
+  {id:"cold", name:"Миша", say:"Апчхи! Я замёрз на улице, и у меня насморк.", need:["warm","rest"], ok:["orange"],
+   why:"Тёплое питьё и отдых помогают согреться. Если поднимется температура, нужно сказать взрослым и обратиться к врачу.",
+   kid:{style:"cap", acc:"#E04B3B", skin:"#E8B58C", shirt:"#7CC36B"}},
+  {id:"bump", name:"Соня", say:"Я ударилась лбом о дверь, теперь шишка.", need:["cold"], ok:["rest"],
+   why:"Холод помогает, чтобы шишка была меньше. Лёд всегда заворачивают в полотенце.",
+   kid:{style:"pigtails", hair:"#E2B65E", acc:"#3C8AD6", skin:"#F6D3B6", shirt:"#FFC93E", tear:true}},
+  {id:"mosquito", name:"Тимур", say:"Меня укусил комар, очень чешется.", need:["cold"], ok:[],
+   why:"Холодный компресс уменьшает зуд. Расчёсывать укус нельзя.",
+   kid:{style:"curly", hair:"#2B2422", skin:"#D9A27A", shirt:"#FF9B2F"}},
+  {id:"sweets", name:"Варя", say:"Я съела слишком много конфет, животик немного болит.", need:["chamomile"], ok:["rest","water"],
+   why:"Поможет тёплый ромашковый чай и поменьше сладкого. Если живот болит сильно, нужно к врачу.",
+   kid:{style:"pony", hair:"#6B3E22", acc:"#E04B3B", skin:"#F3C9A5", shirt:"#9CC8F0"}},
+  {id:"winter", name:"Ваня", say:"Хочу этой зимой болеть пореже.", need:["orange","soap"], ok:["air","rest"],
+   why:"Фрукты дают витамины, а мытьё рук с мылом защищает от микробов.",
+   kid:{style:"short", hair:"#E2B65E", skin:"#F6D3B6", shirt:"#E04B3B"}},
+  {id:"sunburn", name:"Лиза", say:"Я весь день гуляла на солнце, плечи покраснели и горят.", need:["cold","water"], ok:["rest"],
+   why:"Прохладный компресс успокоит кожу, а пить воду нужно больше обычного. В следующий раз пригодится солнцезащитный крем.",
+   kid:{style:"bob", hair:"#3A2A20", skin:"#F2B49B", shirt:"#7CC36B"}},
+  {id:"beach", name:"Егор", say:"Завтра едем на пляж. Что взять, чтобы не обгореть?", need:["hat","sun"], ok:["water"],
+   why:"Панамка защищает голову от перегрева, а солнцезащитный крем защищает кожу.",
+   kid:{style:"cap", acc:"#FFC93E", skin:"#E8B58C", shirt:"#3C8AD6"}},
+  {id:"lips", name:"Даша", say:"Губы обветрились на морозе и трескаются.", need:["balm"], ok:["water"],
+   why:"Гигиеническая помада защищает губы от ветра и мороза.",
+   kid:{style:"pigtails", hair:"#6B3E22", acc:"#F28FA6", skin:"#F3C9A5", shirt:"#9CC8F0"}},
+  {id:"screen", name:"Артём", say:"Я долго играл в телефон, голова устала.", need:["rest","air"], ok:["water"],
+   why:"Глазам и голове нужен отдых. Лучше всего погулять на свежем воздухе.",
+   kid:{style:"short", hair:"#2B2422", skin:"#D9A27A", shirt:"#8C9A92"}},
+  {id:"fever", name:"Полина", say:"У меня очень сильно болит живот, и поднялась температура.", need:["doctor"], ok:[], serious:true,
+   why:"При сильной боли в животе и температуре нельзя ждать. Фармацевт советует срочно обратиться к врачу, а ребёнку нужно сразу сказать взрослым.",
+   kid:{style:"pony", hair:"#C9772E", acc:"#3C8AD6", skin:"#F6D3B6", shirt:"#FF9B2F", tear:true}},
+  {id:"dog", name:"Саша", say:"Меня укусила чужая собака!", need:["doctor"], ok:["soap","antiseptic"], serious:true,
+   why:"После укуса собаки всегда нужно обратиться к врачу. Сразу скажи взрослым.",
+   kid:{style:"curly", hair:"#8A5A3B", skin:"#E8B58C", shirt:"#FFC93E", tear:true}}
+];
+const THANKS = ["Спасибо! Мне уже лучше.", "Спасибо большое!", "Ура, теперь я знаю, что делать!", "Спасибо за совет!", "Спасибо, вы очень помогли!"];
+const ROUND = 8, MIN_STUDY = 8;
+
+/* ================= state ================= */
+const freshTest = () => ({screen:"intro", step:0, answers:{}});
+const freshGame = () => ({screen:"intro", name:"", seen:[], round:[], i:0, picked:[], tries:0, revealed:false, won:0, thanks:"", points:0, helped:0, firstTry:0, msg:null});
+let S = {mode:"home", t:freshTest(), g:freshGame(), sound:true};
+let autoTimer = null;
+const view = document.getElementById("view");
+const bar = document.getElementById("top");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const toTop = () => { try { window.scrollTo(0, 0); } catch(e){} };
+
+/* ================= header ================= */
+function renderBar(){
+  let right = "";
+  if(S.mode === "test") right = `<span class="where">Тест для 8–9 классов</span><button class="link" data-act="home">На главную</button>`;
+  if(S.mode === "game"){
+    const g = S.g;
+    const scores = (g.screen === "counter" || g.screen === "diploma")
+      ? `<span class="score" id="sc-thx"><span class="ic">${svg(MISC.heart,"0 0 24 24")}</span>Спасибо: ${g.helped}</span><span class="score" id="sc-pts"><span class="ic">${svg(MISC.star,"0 0 24 24")}</span>Баллы: ${g.points}</span>` : "";
+    right = `${scores}<button class="iconbtn" data-act="g-sound" aria-label="${S.sound ? "Выключить звук" : "Включить звук"}">${svg(S.sound ? MISC.soundOn : MISC.soundOff, "0 0 24 24")}</button><button class="link" data-act="home">На главную</button>`;
+  }
+  bar.innerHTML = `<button class="logo" data-act="home" aria-label="Шаг в фармацию, на главную">${LOGO}<span>Шаг в фармацию</span></button><div class="top-right">${right}</div>`;
+}
+function bumpScores(){ ["sc-thx","sc-pts"].forEach(id => { const el = document.getElementById(id); if(el){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); } }); }
+
+/* ================= home ================= */
+function renderHome(){
+  view.innerHTML = `<section>
+    <p class="kicker">Профориентация для школьников</p>
+    <h1>Шаг в фармацию</h1>
+    <p class="lead">Знакомство с профессиями аптеки, фармацевтического производства и лаборатории. Выберите раздел по возрасту.</p>
+    <div class="tiles">
+      <article class="tile tile-game" data-act="open-game">
+        <div class="tile-art">${artGame()}</div>
+        <div class="tile-body">
+          <span class="age">1–4 класс</span>
+          <h2>Игра «Аптека добрых советов»</h2>
+          <p>Сначала узнаём, что помогает при царапине, насморке или шишке. Потом встаём за первый стол и помогаем посетителям аптеки.</p>
+          <div class="row"><button class="btn" data-act="open-game">Играть</button><span class="small">около 10 минут</span></div>
+        </div>
+      </article>
+      <article class="tile tile-test" data-act="open-test">
+        <div class="tile-art">${artTest()}</div>
+        <div class="tile-body">
+          <span class="age">8–9 класс</span>
+          <h2>Тест «Кем работать в фармации»</h2>
+          <p>16 вопросов об учёбе, интересах и планах. В конце: колледж или вуз, подходящие направления, профессии и зарплаты.</p>
+          <div class="row"><button class="btn" data-act="open-test">Пройти тест</button><span class="small">7–10 минут</span></div>
+        </div>
+      </article>
+    </div>
+    <p class="small home-note">Для отдельной ссылки или QR-кода добавьте к адресу страницы <b>#game</b> (сразу откроется игра) или <b>#test</b> (сразу откроется тест).</p>
+  </section>`;
+}
+
+/* ================= test: screens ================= */
+function isAnswered(id){
+  const q = QMAP[id]; if(!q) return true;
+  const a = S.t.answers[id];
+  if(q.type === "multi") return Array.isArray(a) && a.length > 0;
+  if(q.type === "pairs") return Array.isArray(a) && a.every(x => x != null);
+  return a != null;
+}
+function renderTestIntro(){
+  view.innerHTML = `<section class="intro">
+    <div>
+      <p class="kicker">Тест для 8–9 классов</p>
+      <h1>Кем работать в фармации</h1>
+      <p class="lead">Фармацевты и провизоры работают не только в аптеках. Их ждут на фармацевтических заводах, в лабораториях контроля качества, на складах дистрибьюторов и в фармацевтических компаниях.</p>
+      <h3>В конце теста ты увидишь</h3>
+      <ul class="plain">
+        <li>где удобнее начать учиться: в колледже или в вузе;</li>
+        <li>три направления фармации, которые тебе подходят;</li>
+        <li>формат работы: с людьми, в офисе, в лаборатории или в разъездах;</li>
+        <li>профессии и зарплаты по данным hh.ru и SuperJob.</li>
+      </ul>
+      <button class="btn" data-act="t-start">Начать тест</button>
+      <p class="small">Тест не проверяет знания. Отвечай так, как тебе интересно на самом деле. 16 вопросов, 7–10 минут.</p>
+    </div>
+    <div class="intro-art green">${artTest()}</div>
+  </section>`;
+}
+function optRow(q, o, i, pressed, extra){
+  return `<button type="button" class="opt ${extra || ""}" aria-pressed="${pressed}" data-act="t-pick" data-q="${q.id}" data-o="${o.id}"><span class="mark"></span><span class="letter">${LETTERS[i]})</span><span>${esc(o.t)}</span></button>`;
+}
+function renderQuestion(q){
+  const a = S.t.answers[q.id];
+  const curIdx = QUESTIONS.indexOf(q);
+  const prog = QUESTIONS.map((x, i) => `<i class="${isAnswered(x.id) ? "done" : i === curIdx ? "now" : ""}"></i>`).join("");
+  let body = "";
+  if(q.type === "single"){
+    body = `<div class="opts">${q.options.map((o, i) => optRow(q, o, i, a === o.id)).join("")}</div>`;
+  } else if(q.type === "multi"){
+    const sel = a || [];
+    body = `<div class="opts multi ${q.two ? "two" : ""}">${q.options.map((o, i) => optRow(q, o, i, sel.includes(o.id), sel.length >= q.max && !sel.includes(o.id) ? "off" : "")).join("")}</div>
+      <p class="counter" id="counter">Выбрано: ${sel.length} из ${q.max}</p>`;
+  } else if(q.type === "slider"){
+    const v = a == null ? q.def : a, st = q.stops[v];
+    body = `<div class="slider">
+      <p class="val" id="sv">${esc(st.v)}</p><p class="cap" id="sc">${esc(st.c)}</p>
+      <input type="range" id="rng-${q.id}" min="0" max="${q.stops.length - 1}" step="1" value="${v}" data-q="${q.id}" aria-label="${esc(q.q)}" aria-valuetext="${esc(st.v)}">
+      <div class="ticks">${q.stops.map(s => `<span>${esc(s.v)}</span>`).join("")}</div></div>`;
+  } else if(q.type === "pairs"){
+    const sel = a || q.pairs.map(() => null);
+    body = `<div class="pairs">${q.pairs.map((p, i) => `<div class="pair" role="group" aria-label="Пара ${i + 1}">
+      <button type="button" class="side" aria-pressed="${sel[i] === 0}" data-act="t-pair" data-q="${q.id}" data-i="${i}" data-s="0">${esc(p[0].t)}</button>
+      <span class="or">или</span>
+      <button type="button" class="side" aria-pressed="${sel[i] === 1}" data-act="t-pair" data-q="${q.id}" data-i="${i}" data-s="1">${esc(p[1].t)}</button></div>`).join("")}</div>`;
+  } else if(q.type === "quiz"){
+    const done = a != null;
+    body = `<div class="opts">${q.options.map((o, i) => optRow(q, o, i, a === o.id, done && o.id === q.correct ? "right" : done && o.id === a ? "wrong" : "")).join("")}</div>`
+      + (done ? `<div class="fb" role="status"><b>${a === q.correct ? "Верно." : "Не совсем."}</b>${esc(q.explain)}</div>` : "");
+  }
+  const ready = isAnswered(q.id) || q.type === "slider";
+  const last = S.t.step === FLOW.length - 1;
+  view.innerHTML = `<section class="q">
+    <div class="q-meta"><span>Вопрос ${q.n} из ${QUESTIONS.length}</span><span>${BLOCKS[q.block]}</span></div>
+    <div class="progress" aria-hidden="true">${prog}</div>
+    <h2 id="qh" tabindex="-1">${esc(q.q)}</h2>
+    ${q.sub ? `<p class="sub">${esc(q.sub)}</p>` : ""}
+    ${body}
+    <div class="nav"><button class="btn btn-line" data-act="t-back">Назад</button><button class="btn" data-act="t-next" ${ready ? "" : "disabled"}>${last ? "Показать результат" : "Далее"}</button></div>
+  </section>`;
+}
+function renderFact(f){
+  view.innerHTML = `<section class="q">
+    <div class="fact"><div class="fart">${svg(SPHERE_ART[f.art])}</div>
+      <div><p class="fact-k">Справка</p><p class="fact-t">${esc(f.text)}</p>
+      <p class="fact-s">Источник: <a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)}</a></p></div></div>
+    <div class="nav"><button class="btn btn-line" data-act="t-back">Назад</button><button class="btn" data-act="t-next">Далее</button></div>
+  </section>`;
+}
+function today(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear();
+}
+function renderResult(){
+  const r = computeResult(S.t.answers);
+  const s1 = SPHERES[r.spheres[0].k], e = EDU[r.edu], f1 = FORMATS[r.formats[0].k];
+  const dirs = r.spheres.slice(0, 3).map((s, i) => `<li class="dir ${i === 0 ? "first" : ""}">
+      <div>${svg(SPHERE_ART[s.k])}</div>
+      <div><span class="tag">${i === 0 ? "Подходит больше всего" : "Тоже подходит"}</span><h4>${esc(SPHERES[s.k].name)}</h4><p>${esc(SPHERES[s.k].text)}</p></div></li>`).join("");
+  const rows = r.profs.map(p => `<div class="prow">
+      <div><b>${esc(p.name)}</b><p class="d">${esc(p.does)}</p></div>
+      <div class="etag">${esc(EDU_TAG[p.edu])}${r.edu === "spo" && p.edu === "vo" ? `<p class="note">можно после колледжа, продолжив учёбу в вузе</p>` : ""}</div>
+      <div><span class="pay">${esc(p.pay)}</span><p class="note"><a href="${p.url}" target="_blank" rel="noopener">${esc(p.note)}</a></p></div></div>`).join("");
+  const vahta = r.vahta > 0 ? `<div class="vahta"><div>${svg(SPHERE_ART.log)}</div><div><b>Работа вахтой</b>
+      <p>Фармацевт или провизор на вахте в аптеках северных городов получает от 120 000 ₽ на руки в месяц. Упаковщикам на складе оптовой фармацевтики платят 3 500–5 000 ₽ за смену, с проживанием и питанием.</p></div></div>` : "";
+  const step2 = r.edu === "vo"
+    ? "Узнай в вузе, какие ЕГЭ нужны для поступления на «Фармацию». Обычно это химия и русский язык, третий предмет зависит от вуза."
+    : r.edu === "spo"
+      ? "Узнай в колледже, какой средний балл аттестата был проходным на специальность «Фармация» в прошлом году."
+      : "Сходи на день открытых дверей колледжа и спроси, как выпускники продолжают учёбу в вузе.";
+  const sources = [...new Map([...Object.values(PROFS).flat().map(p => [p.url, p.name + ": " + p.note]), [FACTS.F1.url, FACTS.F1.src], [FACTS.F2.url, "Сроки обучения: " + FACTS.F2.src]]).entries()];
+  view.innerHTML = `<section class="result">
+    <p class="kicker">Результат теста · ${today()}</p>
+    <h1>Тебе ближе всего ${esc(s1.head)}</h1>
+    <p class="lead">Учиться удобнее начать ${esc(e.where)}. Формат работы, который тебе подходит: ${esc(f1.phrase)}.</p>
+
+    <div class="rb"><h3>Где учиться</h3>
+      <p class="edu-t">${esc(e.title)}</p><p class="edu-p">${esc(e.text)}</p>
+      <div class="scale" aria-label="Шкала от колледжа до вуза">${SCALE.map((s, i) => `<div class="${i === r.step ? "on" : ""}">${s}</div>`).join("")}</div>
+    </div>
+
+    <div class="rb"><h3>Направления фармации</h3><ol class="dirs">${dirs}</ol></div>
+
+    <div class="rb"><h3>Формат работы</h3>
+      <p>Тебе больше подходит работа <b>${esc(f1.phrase)}</b>.</p>
+      <div class="fmts">${FORMAT_KEYS.map(k => `<span class="${k === r.formats[0].k ? "on" : ""}">${FORMATS[k].name}</span>`).join("")}</div>
+    </div>
+
+    <div class="rb"><h3>Профессии</h3>
+      <div class="ptable"><div class="prow head"><div>Профессия</div><div>Где учиться</div><div>Зарплата</div></div>${rows}</div>
+      ${vahta}
+      <p class="small" style="margin-top:12px">Зарплаты указаны по верхней границе предложений работодателей, чаще всего в Москве. Начинающие специалисты получают меньше, с опытом зарплата растёт.</p>
+    </div>
+
+    <div class="rb"><h3>Что сделать дальше</h3>
+      <ul class="next"><li>${esc(s1.next)}</li><li>${esc(step2)}</li><li>Обсуди результат с родителями и пройди тест ещё раз через полгода.</li></ul>
+    </div>
+
+    <details class="src"><summary>Источники данных</summary><ul>${sources.map(([u, t]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul></details>
+
+    <div class="actions">
+      <button class="btn" data-act="t-again">Пройти тест ещё раз</button>
+      <button class="btn btn-line" data-act="t-copy" id="copyBtn">Скопировать результат</button>
+      <button class="btn btn-line" data-act="home">На главную</button>
+    </div>
+    <div id="copyBox"></div>
+  </section>`;
+}
+function renderTest(){
+  const t = S.t;
+  if(t.screen === "intro") return renderTestIntro();
+  if(t.screen === "result") return renderResult();
+  const id = FLOW[t.step];
+  if(FACTS[id]) renderFact(FACTS[id]); else renderQuestion(QMAP[id]);
+}
+function tGo(step){
+  clearTimeout(autoTimer);
+  S.t.step = step; render(); toTop();
+  const h = document.getElementById("qh"); if(h) h.focus({preventScroll:true});
+}
+function tNext(){
+  const id = FLOW[S.t.step], q = QMAP[id];
+  if(q && q.type === "slider" && S.t.answers[id] == null) S.t.answers[id] = q.def;
+  if(q && !isAnswered(id)) return;
+  if(S.t.step < FLOW.length - 1) tGo(S.t.step + 1);
+  else { clearTimeout(autoTimer); S.t.screen = "result"; render(); toTop(); }
+}
+function tBack(){
+  if(S.t.step === 0){ S.t.screen = "intro"; render(); toTop(); return; }
+  tGo(S.t.step - 1);
+}
+function resultText(){
+  const r = computeResult(S.t.answers);
+  const lines = ["Результат теста «Кем работать в фармации», " + today(),
+    "Где учиться: " + EDU[r.edu].title,
+    "Направления: " + r.spheres.slice(0, 3).map(s => SPHERES[s.k].name).join("; "),
+    "Формат работы: " + FORMATS[r.formats[0].k].name,
+    "Профессии:"];
+  r.profs.forEach(p => lines.push("- " + p.name + ": " + p.pay + " (" + EDU_TAG[p.edu].toLowerCase() + ")"));
+  return lines.join("\n");
+}
+
+/* ================= game: sound ================= */
+let actx = null;
+function tone(freqs, dur, type){
+  if(!S.sound) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, k) => {
+      const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + k * dur * 0.8;
+      o.type = type || "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+    });
+  }catch(e){}
+}
+const sndWin = () => tone([523, 659, 784, 1047], 0.15, "triangle");
+const sndNo = () => tone([220, 196], 0.18, "sine");
+const sndTap = () => tone([660], 0.05, "sine");
+
+/* ================= game: screens ================= */
+function renderGameIntro(){
+  const g = S.g;
+  view.innerHTML = `<section class="intro">
+    <div>
+      <p class="kicker">Игра для 1–4 классов</p>
+      <h1>Аптека добрых советов</h1>
+      <ol class="g-steps">
+        <li><b>Учимся.</b> Открой карточки и узнай, что помогает при царапине, насморке и шишке.</li>
+        <li><b>За первым столом.</b> К тебе придут 8 посетителей. Подбери каждому правильный совет.</li>
+        <li><b>Диплом.</b> За правильные советы ты получишь баллы и диплом «Юный провизор».</li>
+      </ol>
+      <div class="field"><label for="kidName">Как тебя зовут?</label><input id="kidName" maxlength="24" autocomplete="off" placeholder="Имя" value="${esc(g.name)}"></div>
+      <button class="btn" data-act="g-study">Начать игру</button>
+      <p class="teacher">Для учителя: игру удобно показывать на интерактивной доске, дети по очереди выходят «за первый стол». В игре нет настоящих лекарств и названий препаратов. Главное правило игры: лекарства выбирают врач и взрослые.</p>
+    </div>
+    <div class="intro-art yellow">${artGame()}</div>
+  </section>`;
+}
+function meterHtml(){
+  const n = S.g.seen.length, total = ITEM_KEYS.length, left = MIN_STUDY - n;
+  return `Изучено ${n} из ${total}${left > 0 ? `. Открой ещё ${left}, чтобы начать игру.` : ". Можно начинать!"}<div class="t"><i style="width:${n / total * 100}%"></i></div>`;
+}
+function renderStudy(){
+  const g = S.g;
+  view.innerHTML = `<section>
+    <p class="kicker">Шаг 1 из 3</p>
+    <h1>Учимся: что от чего помогает</h1>
+    <div class="rules">
+      <div class="rule"><div>${svg(MISC.family)}</div><div>Лекарства выбирают только врач и взрослые.</div></div>
+      <div class="rule red"><div>${svg(ITEM_ART.doctor)}</div><div>Если очень плохо или сильно болит, сразу скажи взрослым.</div></div>
+    </div>
+    <p class="lead">Нажми на карточку, чтобы перевернуть её.</p>
+    <div class="cards">${ITEM_KEYS.map(k => {
+      const it = ITEMS[k], was = g.seen.includes(k);
+      return `<button type="button" class="card ${it.doc ? "doc" : ""} ${was ? "was" : ""}" data-act="g-flip" data-k="${k}" aria-pressed="false" aria-label="${esc(it.n)}">
+        <span class="in"><span class="face front"><span class="seen"></span><span class="ia">${svg(ITEM_ART[k])}</span><b>${esc(it.n)}</b></span>
+        <span class="face back"><b>${esc(it.n)}</b><span>${esc(it.w)}</span></span></span></button>`;
+    }).join("")}</div>
+    <div class="study-foot">
+      <div class="meter" id="meter">${meterHtml()}</div>
+      <button class="btn" id="toCounter" data-act="g-counter" ${g.seen.length >= MIN_STUDY ? "" : "disabled"}>К первому столу</button>
+    </div>
+  </section>`;
+}
+const curCase = () => CASES.find(c => c.id === S.g.round[S.g.i]);
+function renderCounter(){
+  const g = S.g, c = curCase();
+  const wrongNow = k => g.msg && g.msg.k === "no" && !c.need.includes(k) && !c.ok.includes(k);
+  const picked = g.picked.length
+    ? g.picked.map(k => `<button type="button" class="chipi ${wrongNow(k) ? "bad" : ""}" data-act="g-item" data-k="${k}" aria-label="Убрать: ${esc(ITEMS[k].n)}"><span class="ia">${svg(ITEM_ART[k])}</span>${esc(ITEMS[k].n)}<span class="x" aria-hidden="true">×</span></button>`).join("")
+    : `<span class="empty">Выбери на полке, что посоветовать. Можно выбрать до трёх карточек.</span>`;
+  const happy = g.won > 0;
+  const bottom = happy
+    ? `<div class="win" role="status"><span class="pts">+${g.won} ${g.won === 10 ? "баллов, с первого раза!" : "баллов"}</span><p>${esc(c.why)}</p></div>
+       <div class="v-actions"><button class="btn" data-act="g-next">${g.i >= g.round.length - 1 ? "Получить диплом" : "Следующий посетитель"}</button></div>`
+    : `${g.msg ? `<div class="msg ${g.msg.k}" role="status">${esc(g.msg.t)}</div>` : ""}
+       <div class="v-actions"><button class="btn" data-act="g-give" ${g.picked.length ? "" : "disabled"}>Дать совет</button>
+       <span class="remind"><span class="ia">${svg(ITEM_ART.doctor)}</span>Очень плохо? Зови взрослых и врача</span></div>`;
+  view.innerHTML = `<section class="scene">
+    <div class="visit">
+      <div class="v-top">
+        <p class="v-count">Посетитель ${g.i + 1} из ${g.round.length}</p>
+        <div class="v-row"><div class="v-face">${kidSvg(c.kid, happy)}</div>
+          <div class="bubble"><b>${esc(c.name)}</b>${esc(happy ? g.thanks : c.say)}</div></div>
+      </div>
+      <div class="desk"><div class="tray"><p class="t">Твой совет</p><div class="picked">${picked}</div></div></div>
+      <div class="v-bottom">${bottom}</div>
+    </div>
+    <div class="shelves"><h3>Полки аптеки</h3>
+      <div class="shelf-grid">${ITEM_KEYS.map(k => {
+        const on = g.picked.includes(k), blink = g.revealed && !happy && c.need.includes(k) && !on;
+        return `<button type="button" class="item ${blink ? "blink" : ""}" data-act="g-item" data-k="${k}" aria-pressed="${on}"><span class="ia">${svg(ITEM_ART[k])}</span>${esc(ITEMS[k].n)}</button>`;
+      }).join("")}</div>
+    </div>
+  </section>`;
+}
+function renderDiploma(){
+  const g = S.g, max = ROUND * 10;
+  const stars = g.points >= max * 0.85 ? 3 : g.points >= max * 0.55 ? 2 : 1;
+  view.innerHTML = `<section>
+    <div class="dip"><div class="dip-in">
+      <div class="seal"><svg class="s" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="41" fill="#DFF2E7"/><circle cx="42" cy="42" r="31" fill="#16955A"/>${plus(42,42,30,"#FFFFFF")}</svg></div>
+      <p class="dk">ДИПЛОМ</p>
+      <h2>Юный провизор</h2>
+      <p class="to">вручается</p>
+      <div class="kid-name">${esc(g.name.trim() || "юному фармацевту")}</div>
+      <div class="stars" aria-label="${stars} из 3 звёзд">${[0,1,2].map(i => `<span class="ia">${svg(i < stars ? MISC.star : MISC.starOff, "0 0 24 24")}</span>`).join("")}</div>
+      <div class="dstats">
+        <div><b>${g.helped}</b>довольных посетителей</div>
+        <div><b>${g.points}</b>баллов из ${max}</div>
+        <div><b>${g.firstTry}</b>советов с первого раза</div>
+      </div>
+      <p class="promise">Ты знаешь, что помогает при царапине, шишке и насморке, и помнишь главное правило: если очень плохо, нужно сразу сказать взрослым и обратиться к врачу.</p>
+      <p class="ddate">${today()}</p>
+    </div></div>
+    <div class="after">
+      <button class="btn" data-act="g-again">Сыграть ещё раз</button>
+      <button class="btn btn-line" data-act="g-new">Новый игрок</button>
+      <button class="btn btn-line" data-act="home">На главную</button>
+    </div>
+  </section>`;
+}
+function renderGame(){
+  const s = S.g.screen;
+  if(s === "intro") renderGameIntro();
+  else if(s === "study") renderStudy();
+  else if(s === "counter") renderCounter();
+  else renderDiploma();
+}
+function makeRound(){
+  const pool = CASES.filter(c => c.id !== "fever").sort(() => Math.random() - 0.5).slice(0, ROUND - 1);
+  pool.splice(3 + Math.floor(Math.random() * 3), 0, CASES.find(c => c.id === "fever"));
+  return pool.map(c => c.id);
+}
+function startRound(){
+  Object.assign(S.g, {screen:"counter", round:makeRound(), i:0, picked:[], tries:0, revealed:false, won:0, thanks:"", points:0, helped:0, firstTry:0, msg:null});
+  render(); toTop();
+}
+function gCheck(){
+  const g = S.g, c = curCase(), p = g.picked;
+  const wrong = p.filter(k => !c.need.includes(k) && !c.ok.includes(k));
+  const missing = c.need.filter(k => !p.includes(k));
+  if(!wrong.length && !missing.length){
+    const pts = g.revealed ? 2 : g.tries === 0 ? 10 : 5;
+    if(g.tries === 0 && !g.revealed) g.firstTry++;
+    g.points += pts; g.helped++; g.won = pts; g.msg = null;
+    g.thanks = THANKS[Math.floor(Math.random() * THANKS.length)];
+    sndWin(); render(); bumpScores();
+    return;
+  }
+  g.tries++; sndNo();
+  if(c.serious && !p.includes("doctor")) g.msg = {k:"no", t:"Посетителю очень плохо. Вспомни главное правило!"};
+  else if(wrong.length) g.msg = {k:"no", t:wrong.map(k => "«" + ITEMS[k].n + "»").join(" и ") + (wrong.length > 1 ? " здесь не помогут." : " здесь не поможет.") + " Убери лишнее и подумай ещё раз."};
+  else g.msg = {k:"hint", t:missing.length === 1 ? "Почти! Нужно добавить ещё одну карточку." : "Почти! Нужно добавить ещё " + missing.length + " карточки."};
+  if(g.tries >= 2 && !g.revealed){ g.revealed = true; g.msg = {k:"hint", t:"Подсказка: нужные карточки на полке подсвечены жёлтым."}; }
+  render();
+}
+function gNext(){
+  const g = S.g;
+  if(g.i >= g.round.length - 1){ g.screen = "diploma"; render(); toTop(); return; }
+  Object.assign(g, {i:g.i + 1, picked:[], tries:0, revealed:false, won:0, thanks:"", msg:null});
+  render(); toTop();
+}
+
+/* ================= router ================= */
+let lastKey = "";
+function render(){
+  renderBar();
+  if(S.mode === "test") renderTest();
+  else if(S.mode === "game") renderGame();
+  else renderHome();
+  /* animate only when the screen changes, not when an answer is picked */
+  const key = S.mode + ":" + (S.mode === "test" ? S.t.screen + S.t.step : S.mode === "game" ? S.g.screen + S.g.i : "");
+  if(key !== lastKey){ lastKey = key; const sec = view.firstElementChild; if(sec) sec.classList.add("fade"); }
+}
+function setMode(m){
+  clearTimeout(autoTimer);
+  S.mode = m;
+  try { history.replaceState(null, "", m === "home" ? location.pathname + location.search : "#" + m); } catch(e){}
+  render(); toTop();
+}
+
+document.addEventListener("click", ev => {
+  const b = ev.target.closest("[data-act]"); if(!b) return;
+  const act = b.dataset.act, g = S.g, t = S.t;
+  switch(act){
+    case "home": return setMode("home");
+    case "open-test": return setMode("test");
+    case "open-game": return setMode("game");
+
+    case "t-start": t.screen = "flow"; return tGo(0);
+    case "t-next": return tNext();
+    case "t-back": return tBack();
+    case "t-again": S.t = freshTest(); render(); return toTop();
+    case "t-pick": {
+      const q = QMAP[b.dataset.q], oid = b.dataset.o;
+      if(q.type === "single"){
+        t.answers[q.id] = oid; render();
+        clearTimeout(autoTimer); autoTimer = setTimeout(tNext, 420);
+      } else if(q.type === "quiz"){
+        if(t.answers[q.id] != null) return;
+        t.answers[q.id] = oid; render();
+      } else {
+        const sel = (t.answers[q.id] || []).slice(), i = sel.indexOf(oid);
+        if(i >= 0) sel.splice(i, 1);
+        else if(sel.length >= q.max){
+          const c = document.getElementById("counter");
+          if(c){ c.classList.add("warn"); c.textContent = "Можно выбрать не больше " + q.max + ". Сними отметку с одного из вариантов."; }
+          return;
+        } else sel.push(oid);
+        t.answers[q.id] = sel; render();
+      }
+      return;
+    }
+    case "t-pair": {
+      const q = QMAP[b.dataset.q], sel = (t.answers[q.id] || q.pairs.map(() => null)).slice();
+      sel[+b.dataset.i] = +b.dataset.s; t.answers[q.id] = sel; render();
+      return;
+    }
+    case "t-copy": {
+      const text = resultText();
+      const fallback = () => {
+        document.getElementById("copyBox").innerHTML = `<textarea class="copy" id="copyText" readonly aria-label="Текст результата">${esc(text)}</textarea>`;
+        const ta = document.getElementById("copyText"); ta.focus(); ta.select();
+        b.textContent = "Выделите текст ниже и скопируйте";
+      };
+      try { navigator.clipboard.writeText(text).then(() => { b.textContent = "Скопировано"; }, fallback); } catch(e){ fallback(); }
+      return;
+    }
+
+    case "g-sound": S.sound = !S.sound; return renderBar();
+    case "g-study": { const inp = document.getElementById("kidName"); g.name = inp ? inp.value : g.name; g.screen = "study"; sndTap(); render(); return toTop(); }
+    case "g-flip": {
+      const k = b.dataset.k, on = b.getAttribute("aria-pressed") === "true";
+      b.setAttribute("aria-pressed", on ? "false" : "true");
+      b.classList.add("was");
+      if(!g.seen.includes(k)){
+        g.seen.push(k); sndTap();
+        document.getElementById("meter").innerHTML = meterHtml();
+        document.getElementById("toCounter").disabled = g.seen.length < MIN_STUDY;
+      }
+      return;
+    }
+    case "g-counter": return startRound();
+    case "g-item": {
+      if(g.won) return;
+      const k = b.dataset.k, i = g.picked.indexOf(k);
+      if(i >= 0) g.picked.splice(i, 1);
+      else if(g.picked.length < 3) g.picked.push(k);
+      else { g.msg = {k:"hint", t:"Можно выбрать не больше трёх карточек. Убери лишнюю."}; return render(); }
+      if(g.msg && g.msg.t.startsWith("Можно")) g.msg = null;
+      sndTap(); return render();
+    }
+    case "g-give": return gCheck();
+    case "g-next": return gNext();
+    case "g-again": return startRound();
+    case "g-new": S.g = freshGame(); render(); return toTop();
+  }
+});
+document.addEventListener("input", ev => {
+  const el = ev.target;
+  if(el.id === "kidName"){ S.g.name = el.value; return; }
+  if(el.type === "range"){
+    const q = QMAP[el.dataset.q], v = +el.value, st = q.stops[v];
+    S.t.answers[q.id] = v;
+    el.setAttribute("aria-valuetext", st.v);
+    document.getElementById("sv").textContent = st.v;
+    document.getElementById("sc").textContent = st.c;
+  }
+});
+document.addEventListener("keydown", ev => {
+  if(ev.key === "Enter" && ev.target.id === "kidName"){ ev.preventDefault(); const b = document.querySelector('[data-act="g-study"]'); if(b) b.click(); }
+});
+
+function boot(saved){
+  if(saved && saved.mode) S = saved;
+  else {
+    const h = (location.hash || "").replace("#", "");
+    if(h === "test" || h === "game") S.mode = h;
+  }
+  render();
+}
+window.claude?.hot?.snapshot?.(() => S);
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+</script>
+
+</body></html>
