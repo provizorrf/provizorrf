@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Шаг в фармацию</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -282,7 +287,8 @@ ol.g-steps{margin:16px 0 0;padding-left:22px;display:grid;gap:8px;font-size:1.05
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
-
+</head>
+<body>
 <div lang="ru">
   <header class="top"><div class="top-in" id="top"></div></header>
   <main class="main" id="view"></main>
@@ -1234,3 +1240,5 @@ function boot(saved){
 window.claude?.hot?.snapshot?.(() => S);
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
 </script>
+</body>
+</html>
